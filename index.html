@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Estimate the XP and time needed to reach your next or wanted level.">
+  <meta name="theme-color" content="#08111f">
+  <title>SXS XP Calculator</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <div class="page-shell">
+    <header class="hero">
+      <p class="eyebrow">SXS LEVELING TOOL</p>
+      <h1>XP Calculator</h1>
+      <p class="hero-copy">See exactly how much XP—and how much time—you need to reach your next level or a goal level.</p>
+    </header>
+
+    <main>
+      <section class="calculator-card" aria-labelledby="calculator-heading">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">Your progress</p>
+            <h2 id="calculator-heading">Enter your stats</h2>
+          </div>
+          <span class="data-status" id="data-status" role="status">Loading XP data…</span>
+        </div>
+
+        <form id="xp-form" novalidate>
+          <div class="form-grid">
+            <label class="field">
+              <span>Season</span>
+              <select id="season" name="season" required disabled>
+                <option value="">Select a season</option>
+              </select>
+              <small id="season-range">Choose a season to view its level range.</small>
+            </label>
+
+            <label class="field">
+              <span>Current level</span>
+              <input id="current-level" name="currentLevel" type="number" inputmode="numeric" min="1" step="1" placeholder="Example: 100" required disabled>
+              <small>Your level right now.</small>
+            </label>
+
+            <label class="field">
+              <span>Wanted level</span>
+              <input id="wanted-level" name="wantedLevel" type="number" inputmode="numeric" min="2" step="1" placeholder="Example: 150" required disabled>
+              <small>The level you want to reach.</small>
+            </label>
+
+            <label class="field">
+              <span>Current XP in this level</span>
+              <input id="current-xp" name="currentXp" type="number" inputmode="numeric" min="0" step="1" value="0" required disabled>
+              <small>Progress already earned toward your next level.</small>
+            </label>
+
+            <label class="field field-wide">
+              <span>XP gained per hour</span>
+              <input id="xp-per-hour" name="xpPerHour" type="number" inputmode="decimal" min="0.01" step="any" placeholder="Example: 250000" required disabled>
+              <small>Your average XP earned in one hour.</small>
+            </label>
+          </div>
+
+          <p class="form-error" id="form-error" role="alert" hidden></p>
+
+          <div class="form-actions">
+            <button class="primary-button" id="calculate-button" type="submit" disabled>Calculate progress</button>
+            <button class="secondary-button" id="reset-button" type="button" disabled>Reset</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="results" id="results" aria-live="polite" hidden>
+        <article class="result-card next-level-card">
+          <div class="result-card-heading">
+            <div>
+              <p class="section-kicker">Next milestone</p>
+              <h2>Level <span id="next-level-value">—</span></h2>
+            </div>
+            <span class="result-badge" id="progress-percent">0%</span>
+          </div>
+
+          <div class="progress-track" aria-label="Current level progress">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+
+          <dl class="metric-grid">
+            <div>
+              <dt>XP required</dt>
+              <dd id="next-required-xp">—</dd>
+            </div>
+            <div>
+              <dt>XP remaining</dt>
+              <dd id="next-remaining-xp">—</dd>
+            </div>
+            <div>
+              <dt>Estimated time</dt>
+              <dd id="next-time">—</dd>
+            </div>
+            <div>
+              <dt>Decimal hours</dt>
+              <dd id="next-hours">—</dd>
+            </div>
+          </dl>
+        </article>
+
+        <article class="result-card goal-card">
+          <div class="result-card-heading">
+            <div>
+              <p class="section-kicker">Wanted level</p>
+              <h2>Level <span id="goal-level-value">—</span></h2>
+            </div>
+            <span class="result-badge result-badge-accent" id="levels-remaining">— levels</span>
+          </div>
+
+          <dl class="metric-grid">
+            <div>
+              <dt>Total XP remaining</dt>
+              <dd id="goal-remaining-xp">—</dd>
+            </div>
+            <div>
+              <dt>Estimated time</dt>
+              <dd id="goal-time">—</dd>
+            </div>
+            <div>
+              <dt>Decimal hours</dt>
+              <dd id="goal-hours">—</dd>
+            </div>
+            <div>
+              <dt>Average XP/hour</dt>
+              <dd id="goal-rate">—</dd>
+            </div>
+          </dl>
+
+          <button class="copy-button" id="copy-results" type="button">Copy results</button>
+          <p class="copy-status" id="copy-status" role="status"></p>
+        </article>
+      </section>
+
+      <section class="info-card">
+        <h2>How it works</h2>
+        <p>The calculator totals the XP requirements for every level from your current level up to—but not including—your wanted level. Your current XP progress is subtracted from that total.</p>
+      </section>
+    </main>
+
+    <footer>
+      <p>Unofficial community calculator. XP data sourced from the <a href="https://qenu.github.io/ethna-timeline/assets/data/exp_required.json" target="_blank" rel="noreferrer">Ethna Timeline dataset</a>.</p>
+    </footer>
+  </div>
+</body>
+</html>
