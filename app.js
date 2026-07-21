@@ -58,7 +58,20 @@ function setControlsEnabled(enabled) {
   });
 }
 
-function normalizeData(records) {
+function normalizeData(source) {
+  const records = Array.isArray(source)
+    ? source
+    : Object.entries(source).flatMap(([season, payload]) => {
+        const startLevel = Number(payload?.start);
+        const expValues = Array.isArray(payload?.exp) ? payload.exp : [];
+
+        return expValues.map((exp, index) => ({
+          season: Number(season),
+          level: startLevel + index,
+          exp,
+        }));
+      });
+
   const grouped = new Map();
 
   for (const record of records) {
@@ -311,18 +324,16 @@ async function loadData() {
     }
 
     const records = await response.json();
-    if (!Array.isArray(records)) {
-      throw new Error("XP data has an unexpected format.");
-    }
-
     seasonData = normalizeData(records);
     if (seasonData.size === 0) {
       throw new Error("No usable XP records were found.");
     }
 
+    const recordCount = [...seasonData.values()].reduce((total, levels) => total + levels.size, 0);
+
     populateSeasons();
     setControlsEnabled(true);
-    elements.dataStatus.textContent = `${integerFormatter.format(records.length)} XP records loaded`;
+    elements.dataStatus.textContent = `${integerFormatter.format(recordCount)} XP records loaded`;
     elements.dataStatus.classList.add("ready");
   } catch (error) {
     console.error(error);
